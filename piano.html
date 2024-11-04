@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Meu Piano Virtual</title>
+    <style>
+        .piano {
+            width: 800px;
+            margin: 0 auto;
+        }
+
+        .key {
+            display: inline-block;
+            height: 150px;
+        }
+
+        .white {
+            width: 60px;
+            background: white;
+        }
+
+        .black {
+            width: 40px;
+            background: black;
+            position: relative;
+            top: -50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="piano">
+        <div class="key white" data-note="C"></div>
+        <div class="key black" data-note="C#"></div>
+        </div>
+    <script>
+        const keys = document.querySelectorAll('.key');
+
+        keys.forEach(key => {
+            key.addEventListener('click', () => {
+                playNote(key.dataset.note);
+            });
+        });
+
+        function playNote(note) {
+            // Criando um oscillator para gerar o som
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioCtx.createOscillator();
+            oscillator.type = 'sine'; // Tipo de onda (sinusoidal, quadrada, etc.)
+            oscillator.frequency.value = getFrequency(note); // Frequência da nota
+            oscillator.connect(audioCtx.destination);
+            oscillator.start();
+
+            // Parando o som após 1 segundo
+            setTimeout(() => {
+                oscillator.stop();
+            }, 1000);
+        }
+
+        // Função para obter a frequência da nota (simplificada)
+        function getFrequency(note) {
+            // Uma tabela simples de frequências para algumas notas
+            const frequencies = {
+                C: 261.63,
+                "C#": 277.18,
+                // Adicione mais notas aqui
+            };
+            return frequencies[note];
+        }
+    </script>
+</body>
+</html>
